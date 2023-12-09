@@ -5,18 +5,18 @@ use aoc_runner_derive::{aoc, aoc_generator};
 #[derive(Debug)]
 pub struct Map {
     destination: String,
-    ranges: Vec<(u32, u32, u32)>, // map_list: HashMap<u32, u32>,
+    ranges: Vec<(u64, u64, u64)>,
 }
 
 #[aoc_generator(day5)]
-fn input_generator(input: &str) -> (Vec<u32>, HashMap<String, Map>) {
+fn input_generator(input: &str) -> (Vec<u64>, HashMap<String, Map>) {
     let mut res = HashMap::new();
     let mut block_iter = input.split("\n\n");
     let seeds = block_iter.next().unwrap();
     let seeds = seeds
         .trim_start_matches("seeds:")
         .split_whitespace()
-        .map(|x| x.parse::<u32>().unwrap())
+        .map(|x| x.parse::<u64>().unwrap())
         .collect();
     for block in block_iter {
         let mut line_iter = block.lines();
@@ -29,9 +29,9 @@ fn input_generator(input: &str) -> (Vec<u32>, HashMap<String, Map>) {
         let mut ranges = vec![];
         for line in line_iter {
             let splited_line: Vec<&str> = line.trim().splitn(3, ' ').collect();
-            let d_range_start = splited_line[0].parse::<u32>().unwrap();
-            let s_range_start = splited_line[1].parse::<u32>().unwrap();
-            let range_length = splited_line[2].parse::<u32>().unwrap();
+            let d_range_start = splited_line[0].parse::<u64>().unwrap();
+            let s_range_start = splited_line[1].parse::<u64>().unwrap();
+            let range_length = splited_line[2].parse::<u64>().unwrap();
             ranges.push((d_range_start, s_range_start, range_length));
         }
         res.insert(
@@ -46,7 +46,7 @@ fn input_generator(input: &str) -> (Vec<u32>, HashMap<String, Map>) {
 }
 
 #[aoc(day5, part1)]
-pub fn part1(input: &(Vec<u32>, HashMap<String, Map>)) -> u32 {
+pub fn part1(input: &(Vec<u64>, HashMap<String, Map>)) -> u64 {
     let (seeds, categories) = input;
     let mut seeds = seeds.clone();
     let mut source_map = "seed";
@@ -66,7 +66,7 @@ pub fn part1(input: &(Vec<u32>, HashMap<String, Map>)) -> u32 {
     *seeds.iter().min().unwrap()
 }
 
-pub fn find_new_seeds(seeds: &[(u32, u32)], map: &Map, _deep: usize) -> Vec<(u32, u32)> {
+pub fn find_new_seeds(seeds: &[(u64, u64)], map: &Map, _deep: usize) -> Vec<(u64, u64)> {
     let mut new_seeds = vec![];
     for seed in seeds {
         let (seed_range_start, seed_range_end) = *seed;
@@ -111,7 +111,7 @@ pub fn find_new_seeds(seeds: &[(u32, u32)], map: &Map, _deep: usize) -> Vec<(u32
 }
 
 #[aoc(day5, part2)]
-pub fn part2(input: &(Vec<u32>, HashMap<String, Map>)) -> u32 {
+pub fn part2(input: &(Vec<u64>, HashMap<String, Map>)) -> u64 {
     let (source_seeds, categories) = input;
     let mut seeds = vec![];
     for chunk in source_seeds.chunks(2) {
@@ -129,6 +129,7 @@ pub fn part2(input: &(Vec<u32>, HashMap<String, Map>)) -> u32 {
 #[cfg(test)]
 pub mod tests {
     use super::{input_generator, part1, part2};
+    use std::fs;
 
     #[test]
     fn test_part1() {
@@ -170,6 +171,12 @@ pub mod tests {
     }
 
     #[test]
+    fn test_part1_input() {
+        let input = fs::read_to_string("input/2023/day5.txt").unwrap();
+        assert_eq!(part1(&input_generator(&input)), 324724204);
+    }
+
+    #[test]
     fn test_part2() {
         let input = "seeds: 79 14 55 13
 
@@ -206,5 +213,11 @@ pub mod tests {
         56 93 4";
         assert_eq!(part2(&input_generator(input)), 46);
         // 104070862
+    }
+
+    #[test]
+    fn test_part2_input() {
+        let input = fs::read_to_string("input/2023/day5.txt").unwrap();
+        assert_eq!(part2(&input_generator(&input)), 104070862);
     }
 }

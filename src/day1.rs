@@ -6,7 +6,7 @@ fn input_generator_part1(input: &str) -> Vec<u32> {
     let mut res = vec![];
     for line in input.lines() {
         let mut str = line.to_string();
-        str.retain(|x| x.is_digit(10));
+        str.retain(|x| x.is_ascii_digit());
         let first = str.chars().next().unwrap();
         let last = str.pop().unwrap();
         let nb = format!("{first}{last}").parse::<u32>().unwrap();
@@ -37,7 +37,7 @@ fn input_generator_part2(input: &str) -> Vec<u32> {
     for line in input.lines() {
         let mut iter_match = re.captures_iter(line);
         let first_match = iter_match
-            .nth(0)
+            .next()
             .and_then(|x| x.unwrap().get(1))
             .map(|x| x.as_str())
             .unwrap_or("0");
@@ -71,6 +71,7 @@ pub fn part2(input: &[u32]) -> u32 {
 #[cfg(test)]
 pub mod tests {
     use super::{input_generator_part1, input_generator_part2, part1, part2};
+    use std::fs;
 
     #[test]
     fn test_part1() {
@@ -79,8 +80,20 @@ pub mod tests {
     }
 
     #[test]
+    fn test_part1_input() {
+        let input = fs::read_to_string("input/2023/day1.txt").unwrap();
+        assert_eq!(part1(&input_generator_part1(&input)), 54667);
+    }
+
+    #[test]
     fn test_part2() {
         let input = "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen";
         assert_eq!(part2(&input_generator_part2(input)), 281);
+    }
+
+    #[test]
+    fn test_part2_input() {
+        let input = fs::read_to_string("input/2023/day1.txt").unwrap();
+        assert_eq!(part2(&input_generator_part2(&input)), 54203);
     }
 }

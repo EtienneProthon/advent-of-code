@@ -56,12 +56,10 @@ pub fn binary_search(min: u64, max: u64, race_time: u64, best_distance: u64, asc
             } else {
                 min = mid + 1;
             }
+        } else if asc {
+            min = mid + 1;
         } else {
-            if asc {
-                min = mid + 1;
-            } else {
-                max = mid - 1;
-            }
+            max = mid - 1;
         }
         mid = (min + max) / 2;
     }

@@ -10,7 +10,7 @@ fn input_generator(input: &str) -> (GridPos, GridPos) {
     let mut numbers = HashMap::new();
     for (y, line) in input.lines().enumerate() {
         for (x, c) in line.chars().enumerate() {
-            if c.is_digit(10) {
+            if c.is_ascii_digit() {
                 numbers.insert((x, y), c);
             } else if c != '.' {
                 symbols.insert((x, y), c);
@@ -102,6 +102,7 @@ pub fn part2(input: &(GridPos, GridPos)) -> u32 {
 #[cfg(test)]
 pub mod tests {
     use super::{input_generator, part1, part2};
+    use std::fs;
 
     #[test]
     fn test_part1() {
@@ -110,8 +111,20 @@ pub mod tests {
     }
 
     #[test]
+    fn test_part1_input() {
+        let input = fs::read_to_string("input/2023/day3.txt").unwrap();
+        assert_eq!(part1(&input_generator(&input)), 540025);
+    }
+
+    #[test]
     fn test_part2() {
         let input = "467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598..";
         assert_eq!(part2(&input_generator(input)), 467835);
+    }
+
+    #[test]
+    fn test_part2_input() {
+        let input = fs::read_to_string("input/2023/day3.txt").unwrap();
+        assert_eq!(part2(&input_generator(&input)), 84584891);
     }
 }
