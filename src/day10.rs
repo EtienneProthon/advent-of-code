@@ -102,7 +102,6 @@ fn match_direction(
         EDirection::Right => ((current_pos.0 + 1, current_pos.1), EDirection::Left),
     };
     let cell = grid.get(&cell_pos);
-    println!("cell: {:?}", cell);
     if let Some(c) = cell {
         if ECell::to_direction(c).contains(&contain_dir) {
             return Some((cell_pos.0, cell_pos.1, contain_dir));
@@ -184,7 +183,6 @@ pub fn part2(input: &((usize, usize), Grid)) -> u32 {
                     inside = !inside;
                 }
             } else if inside {
-                println!("IN - {} {}", x, y);
                 count_inside += 1;
             }
         }
